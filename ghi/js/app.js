@@ -1,5 +1,25 @@
 window.addEventListener('DOMContentLoaded', async () => {
 
+    function createCard(name, description, pictureUrl, starts, ends, location) {
+        return `
+        <div class="col-md-4">
+        <div class="w-100">
+        <div class="shadow p-3 mb-5 bg-white rounded">
+        <div class="card">
+        <img src="${pictureUrl}" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">${name}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">${location}</h6>
+          <p class="card-text">${description}</p>
+          <p class="card-text">${starts} - ${ends}</p>
+            </div>
+        </div>
+      </div>
+      </div>
+      </div>
+      `;
+    }
+
     const url = 'http://localhost:8000/api/conferences/';
 
     try {
@@ -9,24 +29,25 @@ window.addEventListener('DOMContentLoaded', async () => {
             throw new Error('Response not ok');
         } else {
             const data = await response.json();
-
-            const conference=data.conferences[0];
-            const nameTag = document.querySelector('.card-title');
-            nameTag.innerHTML = conference.name;
-
-
-            const detailUrl = `http://localhost:8000${conference.href}`;
-            const detailResponse = await fetch(detailUrl);
+            for (let conference of data.conferences) {
+                const detailUrl = `http://localhost:8000${conference.href}`;
+                const detailResponse = await fetch(detailUrl);
             if (detailResponse.ok) {
                 const details = await detailResponse.json();
-                const descTag = document.querySelector('.card-text');
-                descTag.innerHTML = details.conference.description;
-                const imageTag = document.querySelector('.card-img-top');
-                imageTag.src = details.conference.location.picture_url;
-                console.log(imageTag)
+                const title = details.conference.name;
+                const description = details.conference.description;;
+                const pictureUrl = details.conference.location.picture_url;
+                const starts = new Date(details.conference.starts);
+                const ends = new Date (details.conference.ends);
+                const location = details.conference.location.name
+                const html = createCard(title, description, pictureUrl, starts.toLocaleDateString(), ends.toLocaleDateString(), location);
+                const column = document.querySelector('.row');
+                column.innerHTML += html;
+            }
             }
         }
     } catch (e) {
         console.error('error', e);
+        const row = document.querySelector('.row');
     }
 });

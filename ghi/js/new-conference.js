@@ -24,7 +24,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         const formData = new FormData(formTag);
         const json = JSON.stringify(Object.fromEntries(formData));
         const confUrl = 'http://localhost:8000/api/conferences/';
-        console.log(formData)
 
         const fetchConfig = {
 
@@ -38,7 +37,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         if (confResponse.ok){
             formTag.reset();
             const newConference = await confResponse.json();
-            console.log(newConference);
         }
     })
-})
+});

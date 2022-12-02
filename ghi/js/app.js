@@ -2,6 +2,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     function createCard(name, description, pictureUrl, starts, ends, location) {
         return `
+        
         <div class="col-md-4">
         <div class="w-100">
         <div class="shadow p-3 mb-5 bg-white rounded">
